@@ -1,0 +1,35 @@
+{
+  "name": "FirebaseReduxSagaBlogPost",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "test": "jest",
+    "flow start": "flow start",
+    "flow stop": "flow stop",
+    "flow status": "flow status",
+    "flow coverage": "flow coverage"
+  },
+  "dependencies": {
+    "firebase": "^5.3.1",
+    "react": "16.4.1",
+    "react-native": "^0.56.0",
+    "react-redux": "^5.0.7",
+    "redux": "^4.0.0",
+    "redux-saga": "^0.16.0"
+  },
+  "devDependencies": {
+    "@babel/preset-flow": "^7.0.0-rc.1",
+    "babel-cli": "^6.26.0",
+    "babel-eslint": "^8.2.6",
+    "babel-jest": "23.4.2",
+    "babel-preset-react-native": "^5",
+    "flow-bin": "^0.75.0",
+    "jest": "23.5.0",
+    "prettier-eslint": "^8.8.2",
+    "react-test-renderer": "16.4.1"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}
