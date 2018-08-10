@@ -8,18 +8,19 @@
 
 import React, { Component } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { TodoType } from "./Common/Types";
-import firebase from "firebase";
-import config from "./config.json";
+import { connect } from "react-redux";
+import type { TodoType, AppState } from "@Common/Types";
+import firebase from "@Common/Firebase";
+import { ActionCreators } from "./Reducer";
 
-firebase.initializeApp(config);
-
-type Props = {};
-type State = {
-  todos: Array<TodoType>
+type Props = {
+  todos: Array<TodoType>,
+  refreshList: (Array<TodoType>) => void
 };
-export default class TodoList extends Component<Props, State> {
+
+class TodoList extends Component<Props> {
   listener: any;
+
   componentDidMount() {
     // #1: Create a reference to the collection you wanna listen to using the method ref.
     const todoRef = firebase.database().ref("todos");
@@ -27,19 +28,22 @@ export default class TodoList extends Component<Props, State> {
     // #2: As long as this listener object is allocated in memory the callback will be dispatched whenever the `todos` collection change.
     this.listener = todoRef.on("value", snapshot => {
       // #3: Update the component's todo array
-      this.setState({ todos: snapshot.val() || [] });
+      const todos: Array<TodoType> = snapshot.val() || [];
+
+      this.props.refreshList(todos);
     });
   }
 
   componentWillUnmount() {
+    // #4: Stop listening to changes to prevent memory leak.
     this.listener.off();
   }
 
   render() {
     return (
       <View style={styles.container}>
-        {this.state.todos.map(todo => (
-          <Text key={todo.id}>{todo.name}</Text>
+        {this.props.todos.map((todo: TodoType) => (
+          <Text key={todo.id}>{todo.text}</Text>
         ))}
       </View>
     );
@@ -49,18 +53,25 @@ export default class TodoList extends Component<Props, State> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    padding: 16,
+    justifyContent: "space-around",
     backgroundColor: "#F5FCFF"
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: "center",
-    margin: 10
-  },
-  instructions: {
-    textAlign: "center",
-    color: "#333333",
-    marginBottom: 5
   }
 });
+
+const mapStateToProps: AppState => { todos: Array<TodoType> } = (
+  state: AppState
+) => {
+  return {
+    todos: state.todos.items
+  };
+};
+
+const mapActions = {
+  refreshList: ActionCreators.updateList
+};
+
+export default connect(
+  mapStateToProps,
+  mapActions
+)(TodoList);
