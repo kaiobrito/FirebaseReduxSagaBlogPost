@@ -11,7 +11,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { connect } from "react-redux";
 import type { TodoType, AppState } from "@Common/Types";
 import firebase from "@Common/Firebase";
-import { ActionCreators } from "./Reducer";
+import { ActionCreators } from "./Actions";
 
 type Props = {
   todos: Array<TodoType>,
